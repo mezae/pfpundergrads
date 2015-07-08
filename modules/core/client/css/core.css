@@ -1,0 +1,52 @@
+.content {
+	margin-top: 70px;
+}
+.undecorated-link:hover {
+	text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+.ng-invalid.ng-dirty{
+	border-color:#FA787E;
+}
+.ng-valid.ng-dirty{
+	border-color:#78FA89;
+}
+
+.header-profile-image {
+	opacity: 0.8;
+	height: 28px;
+	width: 28px;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
+.open  .header-profile-image,
+a:hover .header-profile-image {
+	opacity: 1;
+}
+
+.user-header-dropdown-toggle {
+	padding-top: 11px !important;
+	padding-bottom: 11px !important;
+}
+
+.drop-box {
+    background: white;
+    border: 2px dashed #4d92cd;
+    width: 100%;
+    height: 88vh;
+    text-align: center;
+    padding: 32vh 0;
+}
+
+.dragover {
+    border: 2px dashed #85c739;
+    background: #f6fcf5;
+}
+
+.dragover-err {
+  border: 2px dashed #cd4d52;
+  background: #fcf5f6;
+}

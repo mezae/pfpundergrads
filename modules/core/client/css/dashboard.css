@@ -1,0 +1,72 @@
+body {
+	background-color: #F1F4F1;
+}
+
+.dashboard {
+	margin-bottom: 10px;
+}
+
+.col-md-4 {
+	max-width: 380px;
+}
+
+.projects {
+	height: 125px;
+	border: 1px dashed #95ffd5;
+	background-color: white;
+	border-radius: 2px;
+	padding: 4px 4px;
+	margin: 4px 0;
+	text-align: center;
+}
+
+.capacity {
+	background-color: white;
+	width: 45%;
+	display: inline-block;
+}
+
+.divisor {
+	font-size: 40px;
+	width: 7.5%;
+	display: inline-block;
+	text-align: center;
+	vertical-align: 25%;
+}
+
+.attendance {
+	background-color: white;
+	width: 45%;
+	display: inline-block;
+}
+
+.struggle {
+	background-color: white;
+}
+
+p {
+	margin: 0 0;
+}
+
+.result-number {
+}
+
+.impacts {
+	height: 30px;
+}
+
+.result-impact-type {
+	display: inline-block;
+	padding-right: 4px;
+}
+
+.result-impact-total {
+	border-left: 1px dashed #95ffd5;
+	display: inline-block;
+	font-weight: bold;
+	font-size: 14px;
+	padding-left: 8px;
+}
+
+/* #95ffd5 #a095ff #95bfff #ff95bf*/
+

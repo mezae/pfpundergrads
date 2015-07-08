@@ -1,0 +1,23 @@
+<section data-ng-controller="HomeController">
+	<div class="row">
+	<!-- File Dropzone -->
+		<div class="col-md-12">
+			<div ngf-select ngf-drop class="drop-box" ng-show="!removeDropzone" ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" ngf-change="handleFileSelect($files, $event, $reject)" ngf-accept="'application/vnd.ms-excel,text/csv'" accept="application/vnd.ms-excel,text/csv">
+				<p class="lead">drop csv file here or <br/>click to browse</p>
+		    </div>
+	    </div>
+
+	    <div class="col-md-12 dashboard" ng-show="removeDropzone">
+	    	<div ng-repeat="student in students" ng-class="$index % 3 === 2 ? 'row' : ''">
+		    	<div class="col-md-4">
+			    	<h5 class="text-center">{{student.name}}</h5>
+			    	<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
+						<div ng-repeat="college in student.college | orderBy: 'year'">
+							<p class="result-number">{{college.name}} | {{college.year}}</p>
+						</div>
+			    	</div>
+			    </div>
+	    	</div>
+	    </div>
+	</div>
+</section>

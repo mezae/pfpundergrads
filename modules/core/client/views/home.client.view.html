@@ -12,7 +12,7 @@
 		    	<div class="col-md-4">
 			    	<h5 class="text-center">{{student.name}}</h5>
 			    	<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
-						<div ng-repeat="college in student.college | orderBy: 'year'">
+						<div ng-repeat="college in student.college">
 							<p class="result-number">{{college.name}} | {{college.year}}</p>
 						</div>
 			    	</div>

@@ -55,16 +55,18 @@ angular.module('core').controller('HomeController', ['$scope', '$modal', 'Authen
                         if (index < 0) {
                             $scope.students.push(newStudent);
                         } else {
-                            if ($scope.students[index].college[0].name !== newStudent.college[0].name) {
-                                $scope.students[index].college.push(newStudent.college[0]);
-                            }
+
+                            // if ($scope.students[index].college[0].name !== newStudent.college[0].name) {
+                            $scope.students[index].college.push(newStudent.college[0]);
+                            $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
+                            // }
                         }
                         i++;
                     }
                 }
 
                 $scope.students = _.filter($scope.students, function(student) {
-                    return student.college.length > 1;
+                    return student.college[0].name !== student.college[student.college.length - 1].name;
                 })
                 console.log($scope.students.length);
                 $scope.removeDropzone = true;

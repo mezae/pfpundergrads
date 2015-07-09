@@ -47,7 +47,8 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
                           name: record[headers.name_col],
                           college: [{
                               year: record[headers.year_col].slice(-4),
-                              name: record[headers.college_col]
+                              name: record[headers.college_col],
+                              status: record[headers.status_col]
                           }]
                       };
                       var index = _.findIndex($scope.students, 'id', newStudent.id);

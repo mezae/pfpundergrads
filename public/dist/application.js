@@ -189,17 +189,24 @@ angular.module('articles').factory('Mapping', ['$resource',
 
 // Setting up route
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
-	function($stateProvider, $urlRouterProvider) {
-		// Redirect to home view when route not found
-		$urlRouterProvider.otherwise('/');
+    function($stateProvider, $urlRouterProvider) {
+        // Redirect to home view when route not found
+        $urlRouterProvider.otherwise('/');
 
-		// Home state routing
-		$stateProvider.
-		state('home', {
-			url: '/',
-			templateUrl: 'modules/core/views/home.client.view.html'
-		});
-	}
+        // Home state routing
+        $stateProvider.
+        state('home', {
+            url: '/',
+            templateUrl: 'modules/core/views/home.client.view.html'
+        });
+    }
+]);
+
+// Allows user to download csv file
+angular.module('core').config(['$compileProvider',
+    function($compileProvider) {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|blob|chrome-extension):/);
+    }
 ]);
 'use strict';
 
@@ -227,8 +234,8 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$modal', 'Authentication',
-    function($scope, $modal, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', '$filter', '$modal', 'Authentication',
+    function($scope, $filter, $modal, Authentication) {
         // This provides Authentication context.
         $scope.authentication = Authentication;
 
@@ -267,29 +274,22 @@ angular.module('core').controller('HomeController', ['$scope', '$modal', 'Authen
                 var i = 0;
                 while (i < rows.length) {
                     var record = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if (!record[0]) {
-                        i = rows.length;
+                    var newStudent = {
+                        id: record[headers.id_col],
+                        name: record[headers.name_col],
+                        college: [{
+                            year: record[headers.year_col].slice(-4),
+                            name: record[headers.college_col]
+                        }]
+                    };
+                    var index = _.findIndex($scope.students, 'id', newStudent.id);
+                    if (index < 0) {
+                        $scope.students.push(newStudent);
                     } else {
-                        var newStudent = {
-                            id: record[headers.id_col],
-                            name: record[headers.name_col],
-                            college: [{
-                                year: record[headers.year_col].slice(-4),
-                                name: record[headers.college_col]
-                            }]
-                        };
-                        var index = _.findIndex($scope.students, 'id', newStudent.id);
-                        if (index < 0) {
-                            $scope.students.push(newStudent);
-                        } else {
-
-                            // if ($scope.students[index].college[0].name !== newStudent.college[0].name) {
-                            $scope.students[index].college.push(newStudent.college[0]);
-                            $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
-                            // }
-                        }
-                        i++;
+                        $scope.students[index].college.push(newStudent.college[0]);
+                        $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
                     }
+                    i++;
                 }
 
                 $scope.students = _.filter($scope.students, function(student) {
@@ -297,6 +297,7 @@ angular.module('core').controller('HomeController', ['$scope', '$modal', 'Authen
                 })
                 console.log($scope.students.length);
                 $scope.removeDropzone = true;
+                downloadCSV();
             });
         }
 
@@ -324,6 +325,28 @@ angular.module('core').controller('HomeController', ['$scope', '$modal', 'Authen
                 files[0] = undefined;
             }
         };
+
+        function downloadCSV() {
+            var headers = ['id', 'name', 'college'];
+            var csvString = headers.join(',') + '\r\n';
+            _.forEach($scope.students, function(student) {
+                _.forEach(headers, function(key) {
+                    var line = student[key];
+                    if (key === 'college') {
+                        line = '"' + JSON.stringify(student[key]) + '"';
+                    }
+                    csvString += line + ',';
+                });
+                csvString += '\r\n';
+            });
+
+            var date = $filter('date')(new Date(), 'MM-dd');
+            $scope.fileName = ('UATransfers' + '_' + date + '.csv');
+            var blob = new Blob([csvString], {
+                type: 'text/csv;charset=UTF-8'
+            });
+            $scope.url = window.URL.createObjectURL(blob);
+        }
 
     }
 ])

@@ -251,7 +251,7 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
                 resolve: {
                     arrays: function() {
                         return {
-                            type: 'Impacts',
+                            type: 'Undergrads',
                             required_fields: required_fields,
                             headers: headers
                         };
@@ -272,22 +272,25 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
                 $scope.students = [];
 
                 var i = 0;
+                var count = 0;
                 while (i < rows.length) {
                     var record = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    var newStudent = {
-                        id: record[headers.id_col],
-                        name: record[headers.name_col],
-                        college: [{
-                            year: record[headers.year_col].slice(-4),
-                            name: record[headers.college_col]
-                        }]
-                    };
-                    var index = _.findIndex($scope.students, 'id', newStudent.id);
-                    if (index < 0) {
-                        $scope.students.push(newStudent);
-                    } else {
-                        $scope.students[index].college.push(newStudent.college[0]);
-                        $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
+                    if(record.length > 1) {
+                      var newStudent = {
+                          id: record[headers.id_col],
+                          name: record[headers.name_col],
+                          college: [{
+                              year: record[headers.year_col].slice(-4),
+                              name: record[headers.college_col]
+                          }]
+                      };
+                      var index = _.findIndex($scope.students, 'id', newStudent.id);
+                      if (index === -1) {
+                          $scope.students.push(newStudent);
+                      } else {
+                          $scope.students[index].college.push(newStudent.college[0]);
+                          $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
+                      }
                     }
                     i++;
                 }
@@ -423,6 +426,7 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
         };
     }
 ]);
+
 'use strict';
 
 //Menu service used for managing  menus

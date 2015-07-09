@@ -68,5 +68,8 @@ p {
 	padding-left: 8px;
 }
 
-/* #95ffd5 #a095ff #95bfff #ff95bf*/
+.button-dl{
+	min-height: 50px;
+}
 
+/* #95ffd5 #a095ff #95bfff #ff95bf*/

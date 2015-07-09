@@ -2,7 +2,9 @@
 	<div class="row">
 	<!-- File Dropzone -->
 		<div class="col-md-12">
-			<a class="btn btn-lg btn-link pull-right" role="button" href="{{url}}" download="{{fileName}}" ng-show="removeDropzone"><i class="glyphicon glyphicon-download" tooltip="Download" tooltip-trigger="mouseenter" tooltip-append-to-body="true"></i></a>
+			<div	class="button-dl">
+				<a class="btn btn-lg btn-link pull-right" role="button" href="{{url}}" download="{{fileName}}" ng-show="removeDropzone"><i class="glyphicon glyphicon-download" tooltip="Download" tooltip-trigger="mouseenter" tooltip-append-to-body="true"></i></a>
+			</div>
 
 			<div ngf-select ngf-drop class="drop-box" ng-show="!removeDropzone" ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" ngf-change="handleFileSelect($files, $event, $reject)" ngf-accept="'application/vnd.ms-excel,text/csv'" accept="application/vnd.ms-excel,text/csv">
 				<p class="lead">drop csv file here or <br/>click to browse</p>
@@ -10,16 +12,32 @@
 	    </div>
 
 	    <div class="col-md-12 dashboard" ng-show="removeDropzone">
-	    	<div ng-repeat="student in students" ng-class="$index % 3 === 2 ? 'row' : ''">
-		    	<div class="col-md-4">
-			    	<h5 class="text-center">{{student.name}}</h5>
-			    	<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
-						<div ng-repeat="college in student.college">
-							<p class="result-number">{{college.name}} | {{college.year}}</p>
+				<div ng-repeat="student in students" ng-if="$index % 3 == 0" class="row">
+			    <div class="col-md-4">
+						<h5 class="text-center">{{students[$index].name}}</h5>
+						<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
+							<div ng-repeat="college in students[$index].college">
+								<p class="result-number">{{college.name}} | {{college.year}}</p>
+							</div>
 						</div>
-			    	</div>
-			    </div>
-	    	</div>
-	    </div>
+					</div>
+					<div class="col-md-4">
+						<h5 class="text-center">{{students[$index + 1].name}}</h5>
+						<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
+							<div ng-repeat="college in students[$index + 1].college">
+								<p class="result-number">{{college.name}} | {{college.year}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<h5 class="text-center">{{students[$index + 2].name}}</h5>
+						<div class="projects" ng-style="{'border-color': theColors[$index % theColors.length]}">
+							<div ng-repeat="college in students[$index + 2].college">
+								<p class="result-number">{{college.name}} | {{college.year}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 	</div>
 </section>

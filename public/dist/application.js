@@ -241,8 +241,8 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
 
         $scope.theColors = ['#a095ff', '#95bfff', '#95ffd5', '#ff95bf'];
 
-        function processImpacts(rows, headers) {
-            var required_fields = ['Academic Year', 'UniqueID', 'Name', 'College', 'Status'];
+        function findTransfers(headers, rows) {
+            var required_fields = ['Academic Year', 'StudentID', 'Name', 'College', 'Status'];
             var modal = $modal.open({
                 templateUrl: 'modules/core/views/mapping.client.view.html',
                 controller: 'ModalInstanceCtrl',
@@ -271,31 +271,29 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
 
                 $scope.students = [];
 
-                var i = 0;
-                var count = 0;
-                while (i < rows.length) {
+                for (var i = 0; i < rows.length; i++) {
                     var record = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if(record.length > 1) {
-                      var newStudent = {
-                          id: record[headers.id_col],
-                          name: record[headers.name_col],
-                          college: [{
-                              year: record[headers.year_col].slice(-4),
-                              name: record[headers.college_col],
-                              status: record[headers.status_col]
-                          }]
-                      };
-                      var index = _.findIndex($scope.students, 'id', newStudent.id);
-                      if (index === -1) {
-                          $scope.students.push(newStudent);
-                      } else {
-                          $scope.students[index].college.push(newStudent.college[0]);
-                          $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
-                      }
+                    if (record.length > 1) {
+                        var newStudent = {
+                            id: record[headers.id_col],
+                            name: record[headers.name_col],
+                            college: [{
+                                year: record[headers.year_col].slice(-4),
+                                name: record[headers.college_col],
+                                status: record[headers.status_col]
+                            }]
+                        };
+                        var index = _.findIndex($scope.students, 'id', newStudent.id);
+                        if (index === -1) {
+                            $scope.students.push(newStudent);
+                        } else {
+                            $scope.students[index].college.push(newStudent.college[0]);
+                            $scope.students[index].college = _.sortBy($scope.students[index].college, 'year');
+                        }
                     }
-                    i++;
                 }
 
+                //filter out anyone who started and ended at the same school
                 $scope.students = _.filter($scope.students, function(student) {
                     return student.college[0].name !== student.college[student.college.length - 1].name;
                 })
@@ -305,27 +303,24 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
             });
         }
 
-        $scope.handleFileSelect = function(files, event, reject) {
-            if (files.length) {
-                if ('application/vnd.ms-excel, text/csv'.indexOf(files[0].type) === -1) {
-                    $scope.alert = {
-                        active: true,
-                        type: 'danger',
-                        msg: 'Must be a csv file!'
-                    };
-                } else {
-                    var file = files[0];
-                    var reader = new FileReader();
-                    reader.onload = function(file) {
-                        var content = file.target.result;
-                        var rows = content.split(/[\r\n|\n]+/);
-                        var headers = rows.shift();
-                        headers = headers.split(',');
-                        $scope.results = [];
-                        processImpacts(rows, headers);
-                    };
-                    reader.readAsText(file);
-                }
+        $scope.handleFileSelect = function(files) {
+            if (files.length === 0) {
+                $scope.alert = {
+                    active: true,
+                    type: 'danger',
+                    msg: 'Must be a csv file!'
+                };
+            } else {
+                var file = files[0];
+                var reader = new FileReader();
+                reader.onload = function(file) {
+                    var content = file.target.result;
+                    var rows = content.split(/[\r\n|\n]+/);
+                    var headers = rows.shift();
+                    headers = headers.split(',');
+                    findTransfers(headers, rows);
+                };
+                reader.readAsText(file);
                 files[0] = undefined;
             }
         };
@@ -353,9 +348,10 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
         }
 
     }
-])
+]);
+'use strict';
 
-.controller('ModalInstanceCtrl', ['$state', '$scope', '$filter', '$modalInstance', 'Authentication', 'arrays', 'Mapping',
+angular.module('core').controller('ModalInstanceCtrl', ['$state', '$scope', '$filter', '$modalInstance', 'Authentication', 'arrays', 'Mapping',
     function($state, $scope, $filter, $modalInstance, Authentication, arrays, Mapping) {
         $scope.user = Authentication.user;
         $scope.required_fields = arrays.required_fields;
@@ -427,7 +423,6 @@ angular.module('core').controller('HomeController', ['$scope', '$filter', '$moda
         };
     }
 ]);
-
 'use strict';
 
 //Menu service used for managing  menus

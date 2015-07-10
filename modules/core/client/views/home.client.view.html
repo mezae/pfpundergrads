@@ -2,11 +2,14 @@
 	<div class="row">
 	<!-- File Dropzone -->
 		<div class="col-md-12">
-			<div	class="button-dl">
-				<a class="btn btn-lg btn-link pull-right" role="button" href="{{url}}" download="{{fileName}}" ng-show="removeDropzone"><i class="glyphicon glyphicon-download" tooltip="Download" tooltip-trigger="mouseenter" tooltip-append-to-body="true"></i></a>
+			<alert ng-show="alert.active" type="{{alert.type}}" ng-model="alert" close="alert.active = false">
+				{{alert.msg}}
+			</alert>
+			<div class="button-dl" ng-show="removeDropzone">
+				<a class="btn btn-lg btn-link pull-right" role="button" href="{{url}}" download="{{fileName}}"><i class="glyphicon glyphicon-download" tooltip="Download" tooltip-trigger="mouseenter" tooltip-append-to-body="true"></i></a>
 			</div>
 
-			<div ngf-select ngf-drop class="drop-box" ng-show="!removeDropzone" ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" ngf-change="handleFileSelect($files, $event, $reject)" ngf-accept="'application/vnd.ms-excel,text/csv'" accept="application/vnd.ms-excel,text/csv">
+			<div ngf-select ngf-drop class="drop-box" ng-show="!removeDropzone" ngf-drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" ngf-change="handleFileSelect($files, $event)" ngf-accept="'application/vnd.ms-excel,text/csv'" accept="application/vnd.ms-excel,text/csv">
 				<p class="lead">drop csv file here or <br/>click to browse</p>
 		    </div>
 	    </div>
